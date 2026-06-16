@@ -1,0 +1,9 @@
+.DS_Store
+*.DS_Store
+node_modules/
+dist/
+.env
+*.log
+
+# Raw geodata sources (large, not needed in repo)
+data/sources/

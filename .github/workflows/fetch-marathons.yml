@@ -1,0 +1,31 @@
+name: Fetch Marathon Data
+
+on:
+  schedule:
+    # Sunday 11:30 PM ET = Monday 03:30 UTC
+    - cron: '30 3 * * 1'
+  workflow_dispatch:
+
+jobs:
+  fetch:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Fetch marathon results
+        run: node scripts/fetch-marathons.js
+
+      - name: Commit if changed
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add data/marathons.json
+          git diff --cached --quiet || git commit -m "chore: update marathon results"
+          git push

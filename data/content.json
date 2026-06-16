@@ -1,0 +1,257 @@
+{
+  "workDetail": [
+    {
+      "label": "Medidata Solutions",
+      "dates": "2022–Present",
+      "role": "Data Catalog Product Manager",
+      "logo": "/assets/logos/medidata.svg",
+      "color": "#FF6319",
+      "bullets": [
+        "Own the enterprise data catalog powering <em>Clinical Data Studio</em> — an award-winning clinical data web app",
+        "Championed replacing a homegrown catalog with a SaaS platform; presented exec business case unlocking AI use cases",
+        "Defined metadata schemas & hierarchies enabling a new customer-facing data product marketplace",
+        "Manage agile roadmap & success metrics via Aha, Jira, Pendo, SQL"
+      ],
+      "actions": [
+        { "icon": "🔗", "label": "LinkedIn", "href": "https://www.linkedin.com/in/colin-balcarek/" },
+        { "icon": "✉️", "label": "Email",    "href": "mailto:colin@balcarek.org" }
+      ]
+    },
+    {
+      "label": "Codifyd",
+      "dates": "2020–2022",
+      "role": "Manager, Product MDM Consulting",
+      "logo": "/assets/logos/codifyd.svg",
+      "color": "#FF6319",
+      "bullets": [
+        "Led business analysis for the MDM consulting practice across all client workstreams",
+        "Managed & mentored a team of 10 business analysts",
+        "Retired 10 legacy systems for a global food service provider — reduced analytics request time 35%+",
+        "Reduced new item setup ~25% for a building materials manufacturer via modernized EU regulatory data model",
+        "Acquired by Pivotree"
+      ],
+      "actions": []
+    },
+    {
+      "label": "Scholastic",
+      "dates": "2016–2020",
+      "role": "Product Catalog Product Manager",
+      "logo": "/assets/logos/scholastic.svg",
+      "color": "#FF6319",
+      "bullets": [
+        "Launched global enterprise product catalog across e-commerce and downstream internal systems",
+        "Retired 20+ legacy data systems — unified customer experience, cut support tickets 25%",
+        "Managed 20+ senior stakeholders and 1,000+ internal end users"
+      ],
+      "actions": []
+    },
+    {
+      "label": "McGraw-Hill Education",
+      "dates": "2015–2016",
+      "role": "Digital Product Development Coordinator",
+      "logo": "/assets/logos/mcgrawhill.svg",
+      "color": "#FF6319",
+      "bullets": [
+        "Business analysis of legacy systems to map future-state processes for a new master data platform",
+        "Tested and validated end-to-end integrations across supply chain, manufacturing, and planning platforms"
+      ],
+      "actions": []
+    },
+    {
+      "label": "NYU Stern School of Business",
+      "dates": "2010–2014",
+      "role": "B.S. Information Systems & Marketing",
+      "logo": "/assets/logos/nyu.svg",
+      "color": "#57068C",
+      "bullets": [
+        "Concentrations in Information Systems and Marketing",
+        "Foundation for a career at the intersection of data, product, and technology"
+      ],
+      "actions": []
+    }
+  ],
+  "runningPhotos": [
+    { "src": "/assets/running-2.jpg", "cap": "NYC Marathon · Brooklyn", "pos": "center 25%" },
+    { "src": "/assets/running-1.jpg", "cap": "Bronx 10 Mile",           "pos": "center 20%" },
+    { "src": "/assets/running-3.jpg", "cap": "Finish · Central Park",   "pos": "center 15%" }
+  ],
+  "stationDetail": {
+    "work:125 St": {
+      "title": "Medidata Solutions",
+      "sub":   "Data Catalog Product Manager · 2022–Present",
+      "color": "#FF6319",
+      "photo": null,
+      "bullets": [
+        "Own the enterprise data catalog powering <em>Clinical Data Studio</em> — an award-winning clinical data web app",
+        "Championed replacing a homegrown catalog with a new SaaS platform; presented exec business case unlocking AI use cases",
+        "Defined metadata schemas & hierarchies enabling a new customer-facing data product marketplace",
+        "Manage agile roadmap & success metrics via Aha, Jira, Pendo, SQL"
+      ],
+      "actions": [
+        { "icon": "🔗", "label": "LinkedIn", "href": "https://www.linkedin.com/in/colin-balcarek/" },
+        { "icon": "✉️", "label": "Email",    "href": "mailto:colin@balcarek.org" }
+      ]
+    },
+    "work:96 St": {
+      "title": "Codifyd",
+      "sub":   "Manager, Product MDM Consulting · 2020–2022",
+      "color": "#FF6319",
+      "photo": null,
+      "bullets": [
+        "Led business analysis for the MDM consulting practice across all client workstreams",
+        "Managed & mentored a team of 10 business analysts",
+        "Retired 10 legacy systems for a global food service provider — reduced analytics request time 35%+",
+        "Reduced new item setup ~25% for a building materials manufacturer via modernized EU regulatory data model",
+        "Acquired by Pivotree"
+      ],
+      "actions": []
+    },
+    "work:59 St": {
+      "title": "Scholastic",
+      "sub":   "Product Catalog PM · 2016–2020",
+      "color": "#FF6319",
+      "photo": null,
+      "bullets": [
+        "Launched global enterprise product catalog across e-commerce and downstream internal systems",
+        "Retired 20+ legacy data systems, unified customer experience, cut support tickets 25%",
+        "Managed 20+ senior stakeholders and 1,000+ internal end users"
+      ],
+      "actions": []
+    },
+    "work:Grand Central-42 St": {
+      "title": "McGraw-Hill Education",
+      "sub":   "Digital Product Development Coordinator · 2015–2016",
+      "color": "#FF6319",
+      "photo": null,
+      "bullets": [
+        "Business analysis of legacy systems to map future-state processes for a new master data platform",
+        "Tested and validated end-to-end integrations across supply chain, manufacturing, and planning platforms"
+      ],
+      "actions": []
+    },
+    "work:Bleecker St": {
+      "title": "NYU Stern School of Business",
+      "sub":   "B.S. Information Systems & Marketing",
+      "color": "#FF6319",
+      "photo": null,
+      "bullets": [
+        "Concentrations in Information Systems and Marketing",
+        "Foundation for a career at the intersection of data, product, and technology"
+      ],
+      "actions": []
+    },
+    "running:Start": {
+      "title": "Start · Verrazzano Bridge",
+      "sub":   "Staten Island → 26.2 miles to go",
+      "color": "#EE352E",
+      "photo": "/assets/running-1.jpg",
+      "bullets": [
+        "11 NYC Marathon finishes — every year since 2014 (except 2020)",
+        "One of ~50,000 runners crossing the Verrazzano each November"
+      ],
+      "actions": []
+    },
+    "running:Mile 13": {
+      "title": "Mile 13 · Pulaski Bridge",
+      "sub":   "Greenpoint → Long Island City",
+      "color": "#EE352E",
+      "photo": "/assets/running-2.jpg",
+      "bullets": [
+        "Halfway. Brooklyn behind you, Queens ahead.",
+        "The Pulaski is always louder than you expect."
+      ],
+      "actions": []
+    },
+    "running:Mile 16": {
+      "title": "Mile 16 · Queensboro Bridge",
+      "sub":   "Queens → Manhattan · The silent mile",
+      "color": "#EE352E",
+      "photo": null,
+      "bullets": [
+        "The bridge is silent — no spectators, just the sound of 50,000 feet.",
+        "You come off onto 1st Ave to the loudest crowd of the day."
+      ],
+      "actions": []
+    },
+    "running:Mile 21": {
+      "title": "Mile 21 · The Bronx",
+      "sub":   "The wall is real up here",
+      "color": "#EE352E",
+      "photo": "/assets/running-3.jpg",
+      "bullets": [
+        "The Bronx is short — about a mile — but it feels long at mile 21.",
+        "5 more miles back down through Harlem into Central Park."
+      ],
+      "actions": []
+    },
+    "running:Finish": {
+      "title": "Finish · Central Park",
+      "sub":   "26.2 miles · 5 boroughs · done",
+      "color": "#EE352E",
+      "photo": null,
+      "bullets": [
+        "11 finishes and counting.",
+        "Best time: check the results table."
+      ],
+      "actions": []
+    },
+    "tech:Van Cortlandt-242 St": {
+      "title": "1train.nyc",
+      "sub":   "Real-time arrivals for the IRT 1 line",
+      "color": "#00933C",
+      "photo": null,
+      "bullets": [
+        "Built because the MTA deserved better tooling",
+        "Flask · HTMX · PostgreSQL · GTFS-RT · Python",
+        "Live MTA feed → sub-30s refresh cycle"
+      ],
+      "actions": [
+        { "icon": "→",  "label": "1train.nyc", "href": "https://1train.nyc" },
+        { "icon": "📦", "label": "GitHub",     "href": "https://github.com/colinbalcarek" }
+      ]
+    },
+    "tech:59 St-Columbus Circle": {
+      "title": "colinbalcarek.com",
+      "sub":   "This site — built with Mapbox GL JS",
+      "color": "#00933C",
+      "photo": null,
+      "bullets": [
+        "Static site on GitHub Pages — no build step",
+        "Mapbox GL JS · MTA GTFS · GPX route data",
+        "Marathon results auto-fetched weekly via GitHub Actions"
+      ],
+      "actions": []
+    }
+  },
+  "panels": {
+    "art": {
+      "icon": "🏺",
+      "color": "#0039A6",
+      "title": "Art & Making",
+      "sub": "Ceramics · Printmaking",
+      "html": "<p>Wheel-thrown stoneware. Hand-built vessels. Screen printing and linocut reduction. Limited editions of 10–20.</p><p>The clay doesn't negotiate — best counterweight to the product sprint.</p>",
+      "actions": []
+    },
+    "tech": {
+      "icon": "🚇",
+      "color": "#00933C",
+      "title": "Software",
+      "sub": "1train.nyc",
+      "html": "<p>Real-time arrivals for the IRT Broadway–Seventh Ave line. Built because the MTA deserved better.</p><p style=\"font-size:11px;color:#6b7280\">Flask · HTMX · PostgreSQL · GTFS-RT · Python</p>",
+      "actions": [
+        { "icon": "→",  "label": "1train.nyc", "href": "https://1train.nyc" },
+        { "icon": "gh", "label": "GitHub",     "href": "https://github.com/colinbalcarek" }
+      ]
+    }
+  },
+  "searchIndex": [
+    { "key": "work",    "icon": "💼", "color": "#FF6319", "title": "Medidata Solutions",   "sub": "Product Manager · 2022–Now" },
+    { "key": "work",    "icon": "💼", "color": "#FF6319", "title": "Codifyd",              "sub": "Manager MDM · 2020–2022" },
+    { "key": "work",    "icon": "💼", "color": "#FF6319", "title": "Scholastic",           "sub": "Portfolio Manager · 2016–2020" },
+    { "key": "running", "icon": "🏃", "color": "#EE352E", "title": "NYC Marathon",         "sub": "26.2 mi · 5 boroughs" },
+    { "key": "art",     "icon": "🏺", "color": "#0039A6", "title": "Ceramics",             "sub": "Wheel-thrown stoneware" },
+    { "key": "art",     "icon": "🏺", "color": "#0039A6", "title": "Screen Printing",      "sub": "Linocut · Limited editions" },
+    { "key": "tech",    "icon": "🚇", "color": "#00933C", "title": "1train.nyc",           "sub": "Real-time subway arrivals" },
+    { "key": "work",    "icon": "💼", "color": "#FF6319", "title": "Data Products / MDM",  "sub": "Catalogs · Governance · Integration" }
+  ]
+}

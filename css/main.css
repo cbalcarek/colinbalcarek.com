@@ -431,6 +431,31 @@ body.tour-active #bottom-sheet       { bottom: 67px; }
 body.tour-active #marathon-year-selector { display: none !important; }
 body.tour-active #scale-bar          { display: none; }
 
+/* ── MAP STYLE SWITCHER ── */
+#map-style-switcher {
+  position: fixed; bottom: 80px; right: 16px;
+  background: var(--ui-bg); backdrop-filter: var(--blur);
+  -webkit-backdrop-filter: var(--blur);
+  border-radius: 12px; padding: 8px 10px;
+  box-shadow: 0 2px 10px rgba(0,0,0,.15), 0 0 0 .5px rgba(0,0,0,.1);
+  z-index: 200; display: flex; flex-direction: column;
+  align-items: center; gap: 6px;
+}
+.mss-label {
+  font-size: 9px; font-weight: 700; color: var(--muted);
+  text-transform: uppercase; letter-spacing: .08em;
+}
+#mss-btns { display: flex; flex-direction: column; gap: 3px; }
+.map-style-btn {
+  background: none; border: none; border-radius: 8px;
+  padding: 5px 10px; font-size: 12px; font-weight: 600;
+  color: var(--muted); cursor: pointer; font-family: inherit;
+  text-align: left; transition: background .1s, color .1s;
+  white-space: nowrap;
+}
+.map-style-btn:hover  { background: rgba(0,0,0,.06); color: var(--ink); }
+.map-style-btn.active { background: var(--ink); color: #fff; }
+
 /* ── TOUR START BUTTON ── */
 #tour-start-btn {
   position: fixed; bottom: 28px; left: 50%;

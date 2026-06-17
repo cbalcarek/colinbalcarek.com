@@ -77,70 +77,119 @@ const STATION_FC = {
 
 const MODE_COLORS = { work:'#FF6319', running:'#EE352E', art:'#0039A6', tech:'#00933C' };
 
-// ── MAP LOAD ──
-map.on('load', () => {
-  const lines = [
-    { id:'line-running', src:'marathon-line',  file:'/data/marathon-route.geojson', color:'#EE352E', width:3.5 },
-    { id:'line-tech',    src:'subway-1-line',  file:'/data/subway-1.geojson',       color:'#00933C', width:4   },
-    { id:'line-work',    src:'subway-6-line',  file:'/data/subway-6.geojson',       color:'#FF6319', width:4   },
-    { id:'line-art',     src:'subway-7-line',  file:'/data/subway-7.geojson',       color:'#0039A6', width:4   },
-  ];
-  lines.forEach(({ id, src, file, color, width }) => {
-    map.addSource(src, { type:'geojson', data: file });
-    map.addLayer({ id, type:'line', source: src,
-      paint: { 'line-color': color, 'line-width': width, 'line-cap':'round', 'line-join':'round' },
-      layout: { visibility:'none' },
+// ── MAP STYLES ──
+const MAP_STYLES = [
+  { id:'standard',   label:'Standard',   url:'mapbox://styles/mapbox/light-v11' },
+  { id:'minimal',    label:'Minimal',    url:'mapbox://styles/mapbox/light-v11' }, // street map with layers suppressed
+  { id:'dark',       label:'Dark',       url:'mapbox://styles/mapbox/dark-v11' },
+  { id:'blank',      label:'Schematic',  url:'mapbox://styles/mapbox/empty-v9' },
+];
+let _currentStyleId = 'standard';
+
+const LINE_DEFS = [
+  { id:'line-running', src:'marathon-line',  file:'/data/marathon-route.geojson', color:'#EE352E', width:3.5 },
+  { id:'line-tech',    src:'subway-1-line',  file:'/data/subway-1.geojson',       color:'#00933C', width:4   },
+  { id:'line-work',    src:'subway-6-line',  file:'/data/subway-6.geojson',       color:'#FF6319', width:4   },
+  { id:'line-art',     src:'subway-7-line',  file:'/data/subway-7.geojson',       color:'#0039A6', width:4   },
+];
+
+// Layers to hide in 'minimal' mode (street labels, roads, buildings, POIs)
+const MINIMAL_HIDE = [
+  'road-motorway-trunk','road-primary','road-secondary-tertiary',
+  'road-street','road-minor','road-label',
+  'building','building-outline',
+  'poi-label','transit-label','airport-label',
+  'natural-point-label','natural-line-label',
+  'waterway-label','settlement-label','settlement-subdivision-label',
+  'state-label','country-label',
+  'admin-0-boundary','admin-1-boundary',
+  'road-motorway-trunk-case','road-primary-case','road-secondary-tertiary-case',
+  'road-street-case','road-minor-case',
+  'tunnel-motorway-trunk','tunnel-primary','tunnel-secondary-tertiary',
+  'tunnel-street','tunnel-minor',
+  'bridge-motorway-trunk','bridge-primary','bridge-secondary-tertiary',
+  'bridge-street','bridge-minor',
+];
+
+function addMapLayers() {
+  LINE_DEFS.forEach(({ id, src, file, color, width }) => {
+    if (!map.getSource(src)) map.addSource(src, { type:'geojson', data: file });
+    if (!map.getLayer(id)) {
+      map.addLayer({ id, type:'line', source: src,
+        paint: { 'line-color': color, 'line-width': width, 'line-cap':'round', 'line-join':'round' },
+        layout: { visibility:'none' },
+      });
+    }
+  });
+
+  LINE_DEFS.forEach(({ id, src, color, width }) => {
+    const drawSrc = `${src}-draw`;
+    const drawId  = `${id}-draw`;
+    if (!map.getSource(drawSrc)) map.addSource(drawSrc, { type:'geojson', data:{ type:'Feature', geometry:{ type:'LineString', coordinates:[] }, properties:{} } });
+    if (!map.getLayer(drawId)) {
+      map.addLayer({ id: drawId, type:'line', source: drawSrc,
+        paint: { 'line-color': color, 'line-width': width + 1, 'line-cap':'round', 'line-join':'round' },
+        layout: { visibility:'none' },
+      });
+    }
+  });
+
+  if (!map.getSource('stations')) map.addSource('stations', { type:'geojson', data: STATION_FC });
+
+  if (!map.getLayer('station-glow')) {
+    map.addLayer({ id:'station-glow', type:'circle', source:'stations',
+      paint: {
+        'circle-radius': 16,
+        'circle-color': ['match',['get','key'],'work','#FF6319','running','#EE352E','art','#0039A6','tech','#00933C','#6b7280'],
+        'circle-opacity': 0.13,
+      }, layout:{ visibility:'none' },
     });
-  });
-
-  lines.forEach(({ id, src, color, width }) => {
-    map.addSource(`${src}-draw`, { type:'geojson', data:{ type:'Feature', geometry:{ type:'LineString', coordinates:[] }, properties:{} } });
-    map.addLayer({ id:`${id}-draw`, type:'line', source:`${src}-draw`,
-      paint: { 'line-color': color, 'line-width': width + 1, 'line-cap':'round', 'line-join':'round' },
-      layout: { visibility:'none' },
+  }
+  if (!map.getLayer('station-ring')) {
+    map.addLayer({ id:'station-ring', type:'circle', source:'stations',
+      paint: {
+        'circle-radius': 8,
+        'circle-color': '#ffffff',
+        'circle-stroke-width': 2.5,
+        'circle-stroke-color': ['match',['get','key'],'work','#FF6319','running','#EE352E','art','#0039A6','tech','#00933C','#6b7280'],
+      }, layout:{ visibility:'none' },
     });
-  });
+  }
+  if (!map.getLayer('station-dot')) {
+    map.addLayer({ id:'station-dot', type:'circle', source:'stations',
+      paint: {
+        'circle-radius': 3.5,
+        'circle-color': ['match',['get','key'],'work','#FF6319','running','#EE352E','art','#0039A6','tech','#00933C','#6b7280'],
+      }, layout:{ visibility:'none' },
+    });
+  }
+  if (!map.getLayer('station-labels')) {
+    map.addLayer({ id:'station-labels', type:'symbol', source:'stations',
+      layout: {
+        'text-field': ['get', 'label'],
+        'text-font': ['DIN Pro Medium', 'Arial Unicode MS Regular'],
+        'text-size': 11,
+        'text-offset': [0, 1.6],
+        'text-anchor': 'top',
+        'text-allow-overlap': false,
+        visibility: 'none',
+      },
+      paint: {
+        'text-color': ['match',['get','key'],'work','#FF6319','running','#EE352E','art','#0039A6','tech','#00933C','#6b7280'],
+        'text-halo-color': '#ffffff',
+        'text-halo-width': 2,
+      },
+    });
+  }
 
-  map.addSource('stations', { type:'geojson', data: STATION_FC });
+  // Suppress street layers in minimal mode
+  if (_currentStyleId === 'minimal') {
+    MINIMAL_HIDE.forEach(id => {
+      if (map.getLayer(id)) map.setLayoutProperty(id, 'visibility', 'none');
+    });
+  }
 
-  map.addLayer({ id:'station-glow', type:'circle', source:'stations',
-    paint: {
-      'circle-radius': 16,
-      'circle-color': ['match',['get','key'],'work','#FF6319','running','#EE352E','art','#0039A6','tech','#00933C','#6b7280'],
-      'circle-opacity': 0.13,
-    }, layout:{ visibility:'none' },
-  });
-  map.addLayer({ id:'station-ring', type:'circle', source:'stations',
-    paint: {
-      'circle-radius': 8,
-      'circle-color': '#ffffff',
-      'circle-stroke-width': 2.5,
-      'circle-stroke-color': ['match',['get','key'],'work','#FF6319','running','#EE352E','art','#0039A6','tech','#00933C','#6b7280'],
-    }, layout:{ visibility:'none' },
-  });
-  map.addLayer({ id:'station-dot', type:'circle', source:'stations',
-    paint: {
-      'circle-radius': 3.5,
-      'circle-color': ['match',['get','key'],'work','#FF6319','running','#EE352E','art','#0039A6','tech','#00933C','#6b7280'],
-    }, layout:{ visibility:'none' },
-  });
-  map.addLayer({ id:'station-labels', type:'symbol', source:'stations',
-    layout: {
-      'text-field': ['get', 'label'],
-      'text-font': ['DIN Pro Medium', 'Arial Unicode MS Regular'],
-      'text-size': 11,
-      'text-offset': [0, 1.6],
-      'text-anchor': 'top',
-      'text-allow-overlap': false,
-      visibility: 'none',
-    },
-    paint: {
-      'text-color': ['match',['get','key'],'work','#FF6319','running','#EE352E','art','#0039A6','tech','#00933C','#6b7280'],
-      'text-halo-color': '#ffffff',
-      'text-halo-width': 2,
-    },
-  });
-
+  // Re-register station click handlers
   function handleStationClick(e) {
     e.originalEvent.preventDefault();
     const props = e.features[0].properties;
@@ -159,8 +208,36 @@ map.on('load', () => {
     map.on('mouseleave', layerId, () => { map.getCanvas().style.cursor = ''; });
   });
 
-  setMode('all');
+  setMode(currentMode || 'all');
+}
+
+// ── MAP LOAD ──
+map.on('load', () => {
+  addMapLayers();
 });
+
+// ── STYLE SWITCHER ──
+function switchMapStyle(styleId) {
+  const style = MAP_STYLES.find(s => s.id === styleId);
+  if (!style) return;
+  _currentStyleId = styleId;
+
+  // Clear coord cache — draw layers get wiped by setStyle
+  Object.keys(_lineCoordCache).forEach(k => delete _lineCoordCache[k]);
+
+  map.once('style.load', () => {
+    addMapLayers();
+    // Update station ring halo color for dark/blank styles
+    const halo = (styleId === 'dark') ? '#1a1a1a' : '#ffffff';
+    if (map.getLayer('station-ring')) map.setPaintProperty('station-ring', 'circle-halo-color', halo);
+  });
+  map.setStyle(style.url);
+
+  // Update switcher UI
+  document.querySelectorAll('.map-style-btn').forEach(b =>
+    b.classList.toggle('active', b.dataset.style === styleId)
+  );
+}
 
 // ── LOGO MARKERS (work mode) ──
 const _logoMarkers = [];

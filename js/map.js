@@ -1,5 +1,16 @@
 'use strict';
 
+// ── MAP STYLE SWITCHER ──
+const mssBtns = document.getElementById('mss-btns');
+MAP_STYLES.forEach(s => {
+  const btn = document.createElement('button');
+  btn.className = 'map-style-btn' + (s.id === 'standard' ? ' active' : '');
+  btn.dataset.style = s.id;
+  btn.textContent = s.label;
+  btn.addEventListener('click', () => switchMapStyle(s.id));
+  mssBtns.appendChild(btn);
+});
+
 // ── MODE PILLS ──
 document.querySelectorAll('.mode-pill').forEach(b =>
   b.addEventListener('click', () => setMode(b.dataset.mode))

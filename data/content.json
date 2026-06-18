@@ -223,6 +223,44 @@
       "actions": []
     }
   },
+  "about": {
+    "bio": "I'm a Technical Product Manager based in NYC. I build data products at Medidata, run the NYC Marathon every year, make ceramics and prints, and wrote a subway app because the MTA deserved better.",
+    "details": [
+      "📍 New York City",
+      "💼 Data Catalog PM at Medidata Solutions",
+      "🎓 NYU Stern School of Business"
+    ],
+    "actions": [
+      { "icon": "in", "label": "LinkedIn", "href": "https://www.linkedin.com/in/colin-balcarek/" },
+      { "icon": "✉️", "label": "Email",    "href": "mailto:colin@balcarek.org" }
+    ]
+  },
+  "modeIntros": {
+    "work": {
+      "color": "#FF6319",
+      "icon": "💼",
+      "title": "Work",
+      "sub": "Technical Product Manager · NYC",
+      "body": "I've spent my career building data products — catalogs, MDM systems, and the pipelines that connect them. Currently PM for the enterprise data catalog at Medidata that powers clinical trial data for 1,400+ biopharma customers.",
+      "cta": "Tap a stop on the orange line to see each role."
+    },
+    "art": {
+      "color": "#0039A6",
+      "icon": "🎨",
+      "title": "Art & Making",
+      "sub": "Ceramics · Printmaking",
+      "body": "Wheel-thrown stoneware, hand-built vessels, screen printing, and linocut reduction prints in limited editions of 10–20. The clay doesn't negotiate — best counterweight to the product sprint.",
+      "cta": "Tap a stop on the blue line to explore."
+    },
+    "tech": {
+      "color": "#00933C",
+      "icon": "💻",
+      "title": "Projects",
+      "sub": "1train.nyc · Side projects",
+      "body": "Real-time arrivals for the IRT Broadway–Seventh Ave line. Built because the MTA deserved better. Flask, HTMX, PostgreSQL, GTFS-RT, Python.",
+      "cta": "Tap a stop on the green line to explore."
+    }
+  },
   "panels": {
     "art": {
       "icon": "🏺",

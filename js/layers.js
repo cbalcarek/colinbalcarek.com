@@ -3,20 +3,14 @@
 // ── MAPBOX INIT ──
 mapboxgl.accessToken = 'pk.eyJ1IjoiY2JhbGNhcmVrIiwiYSI6ImNtcWcxN2dqaTAyNDgycXBuMmcyeW03YzUifQ.hjMxeLpc2LWVddfGJbTPPg';
 
-function escapeHtml(str) {
-  return String(str)
-    .replace(/&/g, '&amp;').replace(/</g, '&lt;')
-    .replace(/>/g, '&gt;').replace(/"/g, '&quot;')
-    .replace(/'/g, '&#39;');
-}
 
-const NYC_CENTER = [-73.971, 40.730];
+const NYC_CENTER = [-73.971, 40.775];
 
-const map = new mapboxgl.Map({
+const map = window._map = new mapboxgl.Map({
   container: 'map-container',
   style: 'mapbox://styles/mapbox/light-v11',
   center: NYC_CENTER,
-  zoom: 11, bearing: 0, pitch: 0,
+  zoom: 12, bearing: 29, pitch: 0,
   attributionControl: false, minZoom: 9, maxZoom: 16,
 });
 map.addControl(new mapboxgl.AttributionControl({ compact: true }), 'bottom-right');
@@ -79,11 +73,17 @@ const MODE_COLORS = { work:'#FF6319', running:'#EE352E', art:'#0039A6', tech:'#0
 
 // ── MAP STYLES ──
 const MAP_STYLES = [
-  { id:'standard',   label:'Standard',   url:'mapbox://styles/mapbox/light-v11' },
-  { id:'minimal',    label:'Minimal',    url:'mapbox://styles/mapbox/light-v11' }, // street map with layers suppressed
-  { id:'dark',       label:'Dark',       url:'mapbox://styles/mapbox/dark-v11' },
-  { id:'blank',      label:'Schematic',  url:'mapbox://styles/mapbox/empty-v9' },
+  { id:'standard',  label:'Standard',  url:'mapbox://styles/mapbox/light-v11', bearing: 29 },
+  { id:'minimal',   label:'Minimal',   url:'mapbox://styles/mapbox/light-v11', bearing: 29 },
+  { id:'dark',      label:'Dark',      url:'mapbox://styles/mapbox/dark-v11',  bearing: 29 },
+  { id:'schematic', label:'Schematic', url:'mapbox://styles/mapbox/empty-v9',  bearing: 29 },
+  { id:'vignelli',  label:'Vignelli',  url:'/data/style-vignelli.json',        bearing: 29 },
 ];
+
+function currentBearing() {
+  const s = MAP_STYLES.find(s => s.id === _currentStyleId);
+  return s ? s.bearing : 0;
+}
 let _currentStyleId = 'standard';
 
 const LINE_DEFS = [
@@ -93,31 +93,58 @@ const LINE_DEFS = [
   { id:'line-art',     src:'subway-7-line',  file:'/data/subway-7.geojson',       color:'#0039A6', width:4   },
 ];
 
-// Layers to hide in 'minimal' mode (street labels, roads, buildings, POIs)
+// Exact layer IDs from light-v11 (verified from live style)
+// Keep: land, national-park, landuse, waterway, water, settlement-major-label
 const MINIMAL_HIDE = [
-  'road-motorway-trunk','road-primary','road-secondary-tertiary',
-  'road-street','road-minor','road-label',
-  'building','building-outline',
-  'poi-label','transit-label','airport-label',
-  'natural-point-label','natural-line-label',
-  'waterway-label','settlement-label','settlement-subdivision-label',
-  'state-label','country-label',
-  'admin-0-boundary','admin-1-boundary',
-  'road-motorway-trunk-case','road-primary-case','road-secondary-tertiary-case',
-  'road-street-case','road-minor-case',
-  'tunnel-motorway-trunk','tunnel-primary','tunnel-secondary-tertiary',
-  'tunnel-street','tunnel-minor',
-  'bridge-motorway-trunk','bridge-primary','bridge-secondary-tertiary',
-  'bridge-street','bridge-minor',
+  'land-structure-polygon','land-structure-line',
+  'aeroway-polygon','aeroway-line',
+  'building',
+  'tunnel-path-trail','tunnel-path-cycleway-piste','tunnel-path','tunnel-steps','tunnel-pedestrian','tunnel-simple',
+  'road-path-trail','road-path-cycleway-piste','road-path','road-steps','road-pedestrian','road-simple','road-rail',
+  'bridge-path-trail','bridge-path-cycleway-piste','bridge-path','bridge-steps','bridge-pedestrian','bridge-case-simple','bridge-simple','bridge-rail',
+  'admin-1-boundary-bg','admin-0-boundary-bg','admin-1-boundary','admin-0-boundary','admin-0-boundary-disputed',
+  'road-label-simple','waterway-label','natural-line-label','natural-point-label',
+  'water-line-label','water-point-label',
+  'poi-label','airport-label',
+  'settlement-subdivision-label','settlement-minor-label','settlement-major-label',
+  'state-label','country-label','continent-label',
 ];
 
+// Vignelli: same but keep settlement-major-label for borough orientation
+const VIGNELLI_HIDE = MINIMAL_HIDE.filter(id => id !== 'settlement-major-label');
+
+// Per-style visual overrides applied after layers are added
+const STYLE_THEME = {
+  // background color for empty-base styles, label halo, line width multiplier
+  standard:  { bg: null,      halo: '#ffffff', ringFill: '#ffffff', lineScale: 1,    labelColor: null },
+  minimal:   { bg: null,      halo: '#ffffff', ringFill: '#ffffff', lineScale: 1,    labelColor: null },
+  dark:      { bg: null,      halo: '#111111', ringFill: '#111111', lineScale: 1,    labelColor: null },
+  schematic: { bg: '#f5f0e8', halo: '#f5f0e8', ringFill: '#f5f0e8', lineScale: 1,   labelColor: null },
+  vignelli:  { bg: null,      halo: '#f8f4ec', ringFill: '#f8f4ec', lineScale: 1.6, labelColor: null },
+};
+
 function addMapLayers() {
+  const theme = STYLE_THEME[_currentStyleId] || STYLE_THEME.standard;
+  const isVignelli = _currentStyleId === 'vignelli';
+
+  // Background fill for empty-base styles
+  if (theme.bg && !map.getLayer('bg-fill')) {
+    map.addLayer({
+      id: 'bg-fill', type: 'background',
+      paint: { 'background-color': theme.bg },
+    }, map.getStyle().layers[0]?.id);
+  }
+
   LINE_DEFS.forEach(({ id, src, file, color, width }) => {
     if (!map.getSource(src)) map.addSource(src, { type:'geojson', data: file });
     if (!map.getLayer(id)) {
       map.addLayer({ id, type:'line', source: src,
-        paint: { 'line-color': color, 'line-width': width, 'line-cap':'round', 'line-join':'round' },
-        layout: { visibility:'none' },
+        paint: { 'line-color': color, 'line-width': width * theme.lineScale },
+        layout: {
+          visibility: 'none',
+          'line-cap': isVignelli ? 'square' : 'round',
+          'line-join': isVignelli ? 'miter'  : 'round',
+        },
       });
     }
   });
@@ -128,8 +155,12 @@ function addMapLayers() {
     if (!map.getSource(drawSrc)) map.addSource(drawSrc, { type:'geojson', data:{ type:'Feature', geometry:{ type:'LineString', coordinates:[] }, properties:{} } });
     if (!map.getLayer(drawId)) {
       map.addLayer({ id: drawId, type:'line', source: drawSrc,
-        paint: { 'line-color': color, 'line-width': width + 1, 'line-cap':'round', 'line-join':'round' },
-        layout: { visibility:'none' },
+        paint: { 'line-color': color, 'line-width': (width + 1) * theme.lineScale },
+        layout: {
+          visibility: 'none',
+          'line-cap': isVignelli ? 'square' : 'round',
+          'line-join': isVignelli ? 'miter'  : 'round',
+        },
       });
     }
   });
@@ -139,7 +170,7 @@ function addMapLayers() {
   if (!map.getLayer('station-glow')) {
     map.addLayer({ id:'station-glow', type:'circle', source:'stations',
       paint: {
-        'circle-radius': 16,
+        'circle-radius': isVignelli ? 0 : 16,
         'circle-color': ['match',['get','key'],'work','#FF6319','running','#EE352E','art','#0039A6','tech','#00933C','#6b7280'],
         'circle-opacity': 0.13,
       }, layout:{ visibility:'none' },
@@ -148,9 +179,9 @@ function addMapLayers() {
   if (!map.getLayer('station-ring')) {
     map.addLayer({ id:'station-ring', type:'circle', source:'stations',
       paint: {
-        'circle-radius': 8,
-        'circle-color': '#ffffff',
-        'circle-stroke-width': 2.5,
+        'circle-radius': isVignelli ? 10 : 8,
+        'circle-color': theme.ringFill,
+        'circle-stroke-width': isVignelli ? 3.5 : 2.5,
         'circle-stroke-color': ['match',['get','key'],'work','#FF6319','running','#EE352E','art','#0039A6','tech','#00933C','#6b7280'],
       }, layout:{ visibility:'none' },
     });
@@ -158,7 +189,7 @@ function addMapLayers() {
   if (!map.getLayer('station-dot')) {
     map.addLayer({ id:'station-dot', type:'circle', source:'stations',
       paint: {
-        'circle-radius': 3.5,
+        'circle-radius': isVignelli ? 0 : 3.5,
         'circle-color': ['match',['get','key'],'work','#FF6319','running','#EE352E','art','#0039A6','tech','#00933C','#6b7280'],
       }, layout:{ visibility:'none' },
     });
@@ -167,29 +198,31 @@ function addMapLayers() {
     map.addLayer({ id:'station-labels', type:'symbol', source:'stations',
       layout: {
         'text-field': ['get', 'label'],
-        'text-font': ['DIN Pro Medium', 'Arial Unicode MS Regular'],
-        'text-size': 11,
-        'text-offset': [0, 1.6],
+        'text-font': isVignelli
+          ? ['DIN Pro Bold', 'Arial Unicode MS Bold']
+          : ['DIN Pro Medium', 'Arial Unicode MS Regular'],
+        'text-size': isVignelli ? 12 : 11,
+        'text-offset': [0, isVignelli ? 2 : 1.6],
         'text-anchor': 'top',
         'text-allow-overlap': false,
+        'text-letter-spacing': isVignelli ? 0.05 : 0,
         visibility: 'none',
       },
       paint: {
-        'text-color': ['match',['get','key'],'work','#FF6319','running','#EE352E','art','#0039A6','tech','#00933C','#6b7280'],
-        'text-halo-color': '#ffffff',
+        'text-color': theme.labelColor ||
+          ['match',['get','key'],'work','#FF6319','running','#EE352E','art','#0039A6','tech','#00933C','#6b7280'],
+        'text-halo-color': theme.halo,
         'text-halo-width': 2,
       },
     });
   }
 
-  // Suppress street layers in minimal mode
   if (_currentStyleId === 'minimal') {
     MINIMAL_HIDE.forEach(id => {
       if (map.getLayer(id)) map.setLayoutProperty(id, 'visibility', 'none');
     });
   }
 
-  // Re-register station click handlers
   function handleStationClick(e) {
     e.originalEvent.preventDefault();
     const props = e.features[0].properties;
@@ -222,21 +255,21 @@ function switchMapStyle(styleId) {
   if (!style) return;
   _currentStyleId = styleId;
 
-  // Clear coord cache — draw layers get wiped by setStyle
   Object.keys(_lineCoordCache).forEach(k => delete _lineCoordCache[k]);
 
-  map.once('style.load', () => {
-    addMapLayers();
-    // Update station ring halo color for dark/blank styles
-    const halo = (styleId === 'dark') ? '#1a1a1a' : '#ffffff';
-    if (map.getLayer('station-ring')) map.setPaintProperty('station-ring', 'circle-halo-color', halo);
-  });
   map.setStyle(style.url);
+  const waitForStyle = setInterval(() => {
+    if (map.isStyleLoaded()) {
+      clearInterval(waitForStyle);
+      addMapLayers();
+      map.easeTo({ bearing: style.bearing, duration: 800 });
+    }
+  }, 50);
 
-  // Update switcher UI
   document.querySelectorAll('.map-style-btn').forEach(b =>
     b.classList.toggle('active', b.dataset.style === styleId)
   );
+
 }
 
 // ── LOGO MARKERS (work mode) ──
@@ -314,11 +347,14 @@ function animateLine(lineId) {
   if (_lineCoordCache[lineId]) {
     run(_lineCoordCache[lineId]);
   } else {
-    fetch(LINE_FILES[lineId]).then(r => r.json()).then(gj => {
-      const coords = gj.geometry.coordinates;
-      _lineCoordCache[lineId] = coords;
-      run(coords);
-    });
+    fetch(LINE_FILES[lineId])
+      .then(r => r.json())
+      .then(gj => {
+        const coords = gj.geometry.coordinates;
+        _lineCoordCache[lineId] = coords;
+        run(coords);
+      })
+      .catch(err => console.warn(`Failed to load line ${lineId}:`, err));
   }
 }
 
@@ -365,21 +401,19 @@ function setMode(mode) {
     map.setLayoutProperty('station-labels', 'visibility', mode === 'all' ? 'none' : 'visible');
   }
 
-  document.getElementById('marathon-year-selector')
-    .classList.toggle('visible', mode === 'running');
-
   hideLogoMarkers();
   if (mode === 'work') showLogoMarkers();
 
   if (mode === 'running') openRunningSheet();
+  if (mode === 'work' || mode === 'art' || mode === 'tech') openModeIntroSheet(mode);
 
   const flyTargets = {
     work:    { center:[-73.970, 40.760], zoom:12   },
     running: { center:[-73.971, 40.710], zoom:10.5 },
     art:     { center:[-73.930, 40.752], zoom:11   },
     tech:    { center:[-73.975, 40.780], zoom:11.5 },
-    all:     { center: NYC_CENTER,       zoom:11   },
+    all:     { center: NYC_CENTER,       zoom: 12 },
   };
   const target = flyTargets[mode] || flyTargets.all;
-  map.flyTo({ ...target, bearing:0, duration:900 });
+  map.flyTo({ ...target, bearing: currentBearing(), duration:900 });
 }

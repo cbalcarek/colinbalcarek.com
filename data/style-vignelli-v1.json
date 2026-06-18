@@ -1,0 +1,111 @@
+{
+  "version": 8,
+  "name": "Vignelli",
+  "metadata": {},
+  "center": [-73.971, 40.730],
+  "zoom": 11,
+  "bearing": 29,
+  "pitch": 0,
+  "sources": {
+    "mapbox": {
+      "url": "https://api.mapbox.com/v4/mapbox.mapbox-streets-v8.json?access_token=pk.eyJ1IjoiY2JhbGNhcmVrIiwiYSI6ImNtcWcxN2dqaTAyNDgycXBuMmcyeW03YzUifQ.hjMxeLpc2LWVddfGJbTPPg",
+      "type": "vector"
+    }
+  },
+  "glyphs": "https://api.mapbox.com/fonts/v1/mapbox/{fontstack}/{range}?access_token=pk.eyJ1IjoiY2JhbGNhcmVrIiwiYSI6ImNtcWcxN2dqaTAyNDgycXBuMmcyeW03YzUifQ.hjMxeLpc2LWVddfGJbTPPg",
+  "sprite": "https://api.mapbox.com/styles/v1/mapbox/light-v11/sprite?access_token=pk.eyJ1IjoiY2JhbGNhcmVrIiwiYSI6ImNtcWcxN2dqaTAyNDgycXBuMmcyeW03YzUifQ.hjMxeLpc2LWVddfGJbTPPg",
+  "layers": [
+    {
+      "id": "background",
+      "type": "background",
+      "paint": { "background-color": "#f5f0e8" }
+    },
+    {
+      "id": "landuse-park",
+      "type": "fill",
+      "source": "mapbox",
+      "source-layer": "landuse",
+      "filter": ["match", ["get", "class"], ["park", "golf_course", "recreation_ground", "cemetery", "pitch", "playground"], true, false],
+      "paint": { "fill-color": "#d8e8d0", "fill-opacity": 0.8 }
+    },
+    {
+      "id": "national-park",
+      "type": "fill",
+      "source": "mapbox",
+      "source-layer": "landuse_overlay",
+      "filter": ["==", ["get", "class"], "national_park"],
+      "paint": { "fill-color": "#c8dfc0", "fill-opacity": 0.8 }
+    },
+    {
+      "id": "water",
+      "type": "fill",
+      "source": "mapbox",
+      "source-layer": "water",
+      "paint": { "fill-color": "#a8c5d8" }
+    },
+    {
+      "id": "waterway",
+      "type": "line",
+      "source": "mapbox",
+      "source-layer": "waterway",
+      "filter": ["in", "class", "river", "canal"],
+      "paint": {
+        "line-color": "#a8c5d8",
+        "line-width": ["interpolate", ["linear"], ["zoom"], 8, 0.5, 14, 2]
+      }
+    },
+    {
+      "id": "admin-state",
+      "type": "line",
+      "source": "mapbox",
+      "source-layer": "admin",
+      "filter": ["==", ["get", "admin_level"], 4],
+      "paint": {
+        "line-color": "#cfc8bb",
+        "line-width": 0.75,
+        "line-dasharray": [3, 2]
+      }
+    },
+    {
+      "id": "place-borough",
+      "type": "symbol",
+      "source": "mapbox",
+      "source-layer": "place_label",
+      "filter": ["in", ["get", "type"], ["literal", ["borough", "city"]]],
+      "layout": {
+        "text-field": ["get", "name_en"],
+        "text-font": ["DIN Pro Bold", "Arial Unicode MS Bold"],
+        "text-size": ["interpolate", ["linear"], ["zoom"], 9, 11, 13, 15],
+        "text-letter-spacing": 0.12,
+        "text-transform": "uppercase",
+        "text-max-width": 8
+      },
+      "paint": {
+        "text-color": "#b0a898",
+        "text-halo-color": "#f5f0e8",
+        "text-halo-width": 2
+      }
+    },
+    {
+      "id": "place-neighbourhood",
+      "type": "symbol",
+      "source": "mapbox",
+      "source-layer": "place_label",
+      "filter": ["==", ["get", "type"], "neighbourhood"],
+      "minzoom": 13,
+      "layout": {
+        "text-field": ["get", "name_en"],
+        "text-font": ["DIN Pro Medium", "Arial Unicode MS Regular"],
+        "text-size": 10,
+        "text-letter-spacing": 0.1,
+        "text-transform": "uppercase",
+        "text-max-width": 6
+      },
+      "paint": {
+        "text-color": "#c0b8ae",
+        "text-halo-color": "#f5f0e8",
+        "text-halo-width": 1.5
+      }
+    }
+  ]
+}

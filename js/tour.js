@@ -4,6 +4,26 @@
 
 const TOUR_STOPS = [
   {
+    mode:   null,
+    label:  'Colin',
+    color:  '#FF6319',
+    center: [-73.971, 40.775],
+    zoom:   11,
+    open() {
+      document.querySelectorAll('.mode-pill').forEach(p => p.classList.remove('active'));
+      document.getElementById('pill-about').classList.add('active');
+      openAboutSheet();
+    },
+  },
+  {
+    mode:   'work',
+    label:  'Work',
+    color:  '#FF6319',
+    center: [-73.970, 40.760],
+    zoom:   12,
+    open() { setMode('work'); },
+  },
+  {
     mode:   'work',
     label:  'Medidata',
     color:  '#FF6319',
@@ -193,10 +213,10 @@ function openTourFinalSheet() {
 function addTourButton() {
   const btn = document.createElement('button');
   btn.id = 'tour-start-btn';
-  btn.setAttribute('aria-label', 'Take a guided tour');
-  btn.innerHTML = `<span>▶</span> Tour`;
+  btn.setAttribute('aria-label', 'Take the tour');
+  btn.innerHTML = `Take the Tour →`;
   btn.addEventListener('click', tourStart);
-  document.body.appendChild(btn);
+  document.getElementById('identity-header').appendChild(btn);
 }
 
 buildTourUI();

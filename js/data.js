@@ -1,49 +1,21 @@
 'use strict';
 
-// ── MARATHON API ──
-const NYRR_BODY = JSON.stringify({
-  runnerId:'52453605',searchString:null,year:null,distance:'MAR',teamCode:null,
-  overallPlaceFrom:null,overallPlaceTo:null,paceFrom:null,paceTo:null,
-  overallTimeFrom:null,overallTimeTo:null,gunTimeFrom:null,gunTimeTo:null,
-  ageGradedTimeFrom:null,ageGradedTimeTo:null,ageGradedPlaceFrom:null,
-  ageGradedPlaceTo:null,ageGradedPerformanceFrom:null,ageGradedPerformanceTo:null,
-  pageIndex:1,pageSize:51,sortColumn:'EventDate',sortDescending:true,
-});
-
-const MARATHON_CACHE_KEY = 'marathons_v1';
-const MARATHON_CACHE_TTL = 24 * 60 * 60 * 1000;
+// ── MARATHON ──
+const MARATHON_CACHE_KEY = 'marathons_v2';
 
 async function loadMarathons() {
-  const cached = (() => {
-    try {
-      const raw = localStorage.getItem(MARATHON_CACHE_KEY);
-      if (!raw) return null;
-      const { ts, items } = JSON.parse(raw);
-      return (Date.now() - ts < MARATHON_CACHE_TTL) ? items : null;
-    } catch { return null; }
-  })();
-  if (cached) return cached;
-
-  const fromApi = await fetch('https://rmsprodapi.nyrr.org/api/v2/runners/races', {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json;charset=utf-8', 'Origin': 'https://results.nyrr.org' },
-    body: NYRR_BODY,
-  }).then(r => r.ok ? r.json() : null).catch(() => null);
-
-  if (fromApi) {
-    const items = fromApi.items.map(r => ({
-      year: new Date(r.startDateTime).getFullYear(),
-      time: r.actualTime,
-      pace: r.actualPace,
-    }));
-    try { localStorage.setItem(MARATHON_CACHE_KEY, JSON.stringify({ ts: Date.now(), items })); } catch {}
-    return items;
-  }
+  try {
+    const raw = localStorage.getItem(MARATHON_CACHE_KEY);
+    if (raw) {
+      const { items } = JSON.parse(raw);
+      if (items?.length) return items;
+    }
+  } catch {}
 
   return fetch('/data/marathons.json')
-    .then(r => r.json()).then(d => d.items)
-    .catch(() => [2013,2014,2015,2016,2017,2018,2019,2021,2022,2023,2024,2025]
-      .map(year => ({ year, time: null, pace: null })));
+    .then(r => r.json())
+    .then(d => d.items || [])
+    .catch(() => []);
 }
 
 function marathonTableHtml(items) {
@@ -72,11 +44,14 @@ let MARATHON_DATA = [];
 let CONTENT = null;
 
 const contentReady = fetch('/data/content.json')
-  .then(r => r.json())
+  .then(r => {
+    if (!r.ok) throw new Error(`content.json ${r.status}`);
+    return r.json();
+  })
   .then(data => { CONTENT = data; return data; })
-  .catch(() => {
-    // Fallback: empty-but-safe structure so the page still loads
-    CONTENT = { workDetail: [], runningPhotos: [], stationDetail: {}, panels: {}, searchIndex: [] };
+  .catch(err => {
+    console.warn('Failed to load content.json:', err);
+    CONTENT = { workDetail: [], runningPhotos: [], stationDetail: {}, about: {}, modeIntros: {}, panels: {}, searchIndex: [] };
     return CONTENT;
   });
 
@@ -85,3 +60,5 @@ function getWorkDetail()    { return CONTENT ? CONTENT.workDetail    : []; }
 function getRunningPhotos() { return CONTENT ? CONTENT.runningPhotos : []; }
 function getStationDetail() { return CONTENT ? CONTENT.stationDetail : {}; }
 function getSearchIndex()   { return CONTENT ? CONTENT.searchIndex   : []; }
+function getAbout()         { return CONTENT ? CONTENT.about         : {}; }
+function getModeIntro(mode) { return CONTENT && CONTENT.modeIntros ? CONTENT.modeIntros[mode] : null; }

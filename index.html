@@ -2,7 +2,8 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <meta name="theme-color" content="#e8e4dc">
   <title>Colin Balcarek — NYC</title>
   <meta name="description" content="Colin Balcarek — Technical Product Manager based in New York City. NYC Marathon × 11, ceramics, software.">
 
@@ -19,6 +20,7 @@
   <meta name="twitter:description" content="Technical Product Manager · NYC Marathon × 11 · Ceramics · Software">
   <meta name="twitter:image"       content="https://colinbalcarek.com/assets/og-image.png">
 
+  <link rel="icon" type="image/svg+xml" href="/assets/icons/favicon.svg">
   <link href="https://api.mapbox.com/mapbox-gl-js/v3.4.0/mapbox-gl.css" rel="stylesheet">
   <link rel="stylesheet" href="css/main.css">
 </head>
@@ -27,77 +29,39 @@
 <!-- Skip to content -->
 <a class="skip-link" href="#map-container">Skip to map</a>
 
-<!-- ── SOLARI BOARD INTRO ── -->
-<div id="solari" role="status" aria-label="Loading: Colin Balcarek, Technical Product Manager, New York City 2026">
-  <div id="sb-r1" class="sb-row" aria-hidden="true"></div>
-  <div style="height:6px" aria-hidden="true"></div>
-  <div id="sb-r2" class="sb-row" aria-hidden="true"></div>
-  <div style="height:4px" aria-hidden="true"></div>
-  <div id="sb-r3" class="sb-row" aria-hidden="true"></div>
-  <div class="sb-label" aria-hidden="true">BALCAREK.COM · NEW YORK CITY · 2026</div>
-  <button id="solari-skip">SKIP →</button>
-</div>
-
 <!-- ── MAP ── -->
 <div id="map-container" role="img" aria-label="Interactive map of New York City"></div>
 
 <!-- ── IDENTITY HEADER (top-left) ── -->
 <div id="identity-header">
-  <div id="ih-main">
+  <div id="ih-main" role="button" tabindex="0" aria-label="About Colin" style="cursor:pointer">
     <img src="assets/headshot.jpg" alt="Colin Balcarek" id="ih-avatar">
     <div id="ih-text">
-      <div id="ih-name">Colin Balcarek</div>
+      <div id="ih-name"><span class="sb-bullet" style="background:#FF6319" aria-hidden="true">C</span> Colin Balcarek</div>
       <div id="ih-role">Technical Product Manager · NYC</div>
       <div id="ih-current"><span class="ih-dot"></span>Currently at: Medidata Solutions</div>
     </div>
     <div id="ih-actions">
       <a href="https://www.linkedin.com/in/colin-balcarek/" target="_blank" rel="noopener" aria-label="LinkedIn" class="id-link">in</a>
       <a href="mailto:colin@balcarek.org" aria-label="Email" class="id-link">✉</a>
-      <button id="search-toggle" class="id-link" aria-label="Search" aria-expanded="false">
-        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
-      </button>
+      <a href="https://github.com/cbalcarek" target="_blank" rel="noopener" aria-label="GitHub" class="id-link">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 2C6.477 2 2 6.477 2 12c0 4.42 2.865 8.166 6.839 9.489.5.092.682-.217.682-.482 0-.237-.008-.866-.013-1.7-2.782.603-3.369-1.342-3.369-1.342-.454-1.155-1.11-1.462-1.11-1.462-.908-.62.069-.608.069-.608 1.003.07 1.531 1.03 1.531 1.03.892 1.529 2.341 1.087 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.11-4.555-4.943 0-1.091.39-1.984 1.029-2.683-.103-.253-.446-1.27.098-2.647 0 0 .84-.269 2.75 1.025A9.578 9.578 0 0 1 12 6.836a9.59 9.59 0 0 1 2.504.337c1.909-1.294 2.747-1.025 2.747-1.025.546 1.377.202 2.394.1 2.647.64.699 1.028 1.592 1.028 2.683 0 3.842-2.339 4.687-4.566 4.935.359.309.678.919.678 1.852 0 1.336-.012 2.415-.012 2.741 0 .267.18.578.688.48C19.138 20.163 22 16.418 22 12c0-5.523-4.477-10-10-10z"/></svg>
+      </a>
     </div>
   </div>
-  <div id="search-expand" hidden>
-    <input id="search-input" type="search" placeholder="Search work, running, art…"
-           autocomplete="off" spellcheck="false" aria-label="Search"/>
-  </div>
-  <div id="search-results" role="listbox" aria-label="Search results"></div>
 </div>
 
 <!-- ── MODE SWITCHER ── -->
 <nav id="mode-switcher" aria-label="Map modes">
-  <button class="mode-pill active" data-mode="all"     aria-pressed="true" >🗺 Explore</button>
+  <button class="mode-pill" id="pill-about" aria-label="About Colin">👤 Colin</button>
   <button class="mode-pill"        data-mode="work"    aria-pressed="false">💼 Work</button>
   <button class="mode-pill"        data-mode="running" aria-pressed="false" id="pill-running">🏃 Running</button>
-  <button class="mode-pill"        data-mode="art"     aria-pressed="false">🏺 Art</button>
-  <button class="mode-pill"        data-mode="tech"    aria-pressed="false">💻 Software</button>
+  <button class="mode-pill"        data-mode="art"     aria-pressed="false">🎨 Art</button>
+  <button class="mode-pill"        data-mode="tech"    aria-pressed="false">💻 Projects</button>
 </nav>
 
 <!-- ── TAP HINT ── -->
 <div id="tap-hint" aria-hidden="true">Tap any stop to explore →</div>
-
-<!-- ── MARATHON YEAR SELECTOR ── -->
-<div id="marathon-year-selector" aria-label="Select marathon year">
-  <span style="font-size:11px;color:#6b7280;margin-right:4px" aria-hidden="true">Year:</span>
-</div>
-
-<!-- ── MAP CONTROLS ── -->
-<div id="map-controls" role="group" aria-label="Map zoom">
-  <button class="mc-btn" id="zoom-in"  aria-label="Zoom in">+</button>
-  <button class="mc-btn" id="zoom-out" aria-label="Zoom out">−</button>
-</div>
-<!-- ── MAP STYLE SWITCHER ── -->
-<div id="map-style-switcher" aria-label="Map style">
-  <span class="mss-label">Style</span>
-  <div id="mss-btns"></div>
-</div>
-
-<!-- ── SCALE BAR ── -->
-<div id="scale-bar" aria-hidden="true">
-  <div class="scale-line" style="width:58px"></div>
-  <span>5 miles</span>
-</div>
 
 <!-- ── BOTTOM SHEET ── -->
 <div id="bottom-sheet" role="complementary" aria-label="Details">
@@ -122,7 +86,6 @@
 
 <script src="https://api.mapbox.com/mapbox-gl-js/v3.4.0/mapbox-gl.js"></script>
 <script src="js/data.js"></script>
-<script src="js/solari.js"></script>
 <script src="js/layers.js"></script>
 <script src="js/sheets.js"></script>
 <script src="js/map.js"></script>

@@ -99,13 +99,23 @@ body { font-family: -apple-system, 'Helvetica Neue', Helvetica, Arial, sans-seri
 #identity-header.collapsed #ih-actions,
 #identity-header.collapsed #tour-start-btn { display: none; }
 #identity-header.collapsed #ih-main {
-  padding: 5px;
-  border-radius: 50%;
-  width: 44px;
-  height: 44px;
-  justify-content: center;
+  padding: 5px 10px 5px 5px;
+  border-radius: 30px;
+  width: auto; height: auto;
+  gap: 8px;
 }
 #identity-header.collapsed #ih-avatar { width: 34px; height: 34px; min-width: 34px; }
+
+#ih-collapsed-cta {
+  display: none;
+  font-size: 12px; font-weight: 600; color: #fff;
+  background: #2563eb; border: none; border-radius: 8px;
+  padding: 6px 12px; cursor: pointer; font-family: inherit;
+  white-space: nowrap; transition: background .15s;
+  text-decoration: none; align-items: center;
+}
+#ih-collapsed-cta:hover { background: #1d4ed8; }
+#identity-header.collapsed #ih-collapsed-cta { display: inline-flex; }
 
 /* ── TAP HINT ── */
 #tap-hint {

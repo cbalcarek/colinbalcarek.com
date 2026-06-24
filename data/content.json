@@ -7,8 +7,8 @@
       "logo": "/assets/logos/medidata.svg",
       "color": "#FF6319",
       "bullets": [
-        "Own the enterprise data catalog powering <em>Clinical Data Studio</em> — an award-winning clinical data web app",
-        "Championed replacing a homegrown catalog with a SaaS platform; presented exec business case unlocking AI use cases",
+        "Own an enterprise data catalog platform used by 1,400+ customers — the metadata layer for a flagship data product",
+        "Championed replacing a homegrown catalog with a SaaS platform; built exec business case unlocking AI use cases",
         "Defined metadata schemas & hierarchies enabling a new customer-facing data product marketplace",
         "Manage agile roadmap & success metrics via Aha, Jira, Pendo, SQL"
       ],
@@ -82,8 +82,8 @@
       "color": "#FF6319",
       "photo": null,
       "bullets": [
-        "Own the enterprise data catalog powering <em>Clinical Data Studio</em> — an award-winning clinical data web app",
-        "Championed replacing a homegrown catalog with a new SaaS platform; presented exec business case unlocking AI use cases",
+        "Own an enterprise data catalog platform used by 1,400+ customers — the metadata layer for a flagship data product",
+        "Championed replacing a homegrown catalog with a SaaS platform; built exec business case unlocking AI use cases",
         "Defined metadata schemas & hierarchies enabling a new customer-facing data product marketplace",
         "Manage agile roadmap & success metrics via Aha, Jira, Pendo, SQL"
       ],
@@ -224,12 +224,13 @@
     }
   },
   "about": {
-    "bio": "I'm a Technical Product Manager based in NYC. I build data products at Medidata, run the NYC Marathon every year, make ceramics and prints, and wrote a subway app because the MTA deserved better.",
+    "bio": "I'm a Technical Product Manager based in NYC. I build data products, run the NYC Marathon every year, make ceramics and prints, and wrote a subway app because the MTA deserved better.",
     "details": [
       "📍 New York City",
-      "💼 Data Catalog PM at Medidata Solutions",
-      "🎓 NYU Stern School of Business"
+      "💼 Data & Platform PM · 10 years experience",
+      "🎓 NYU Stern · Information Systems & Marketing"
     ],
+    "resume": "/assets/colin-balcarek-resume.pdf",
     "actions": [
       { "icon": "in", "label": "LinkedIn", "href": "https://www.linkedin.com/in/colin-balcarek/" },
       { "icon": "✉️", "label": "Email",    "href": "mailto:colin@balcarek.org" }
@@ -240,8 +241,8 @@
       "color": "#FF6319",
       "icon": "💼",
       "title": "Work",
-      "sub": "Technical Product Manager · NYC",
-      "body": "I've spent my career building data products — catalogs, MDM systems, and the pipelines that connect them. Currently PM for the enterprise data catalog at Medidata that powers clinical trial data for 1,400+ biopharma customers.",
+      "sub": "Data & Platform PM · NYC",
+      "body": "10 years building data products — enterprise catalogs, MDM platforms, and the integrations that make them useful. I've retired 30+ legacy systems, managed 1,000+ end users, and led teams from roadmap to release. Currently owning a data catalog platform at Medidata used by 1,400+ enterprise customers.",
       "cta": "Tap a stop on the orange line to see each role."
     },
     "art": {
@@ -256,8 +257,8 @@
       "color": "#00933C",
       "icon": "💻",
       "title": "Projects",
-      "sub": "1train.nyc · Side projects",
-      "body": "Real-time arrivals for the IRT Broadway–Seventh Ave line. Built because the MTA deserved better. Flask, HTMX, PostgreSQL, GTFS-RT, Python.",
+      "sub": "1train.nyc · This site",
+      "body": "I built 1train.nyc — a real-time arrivals app for the NYC subway — because the MTA deserved better tooling. A PM who can ship. Flask, HTMX, PostgreSQL, GTFS-RT feeds, Python. This site is also hand-built: Mapbox GL JS, no framework, no build step.",
       "cta": "Tap a stop on the green line to explore."
     }
   },

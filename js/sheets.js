@@ -7,18 +7,26 @@ const bsBody = document.getElementById('bs-body');
 function openBS() {
   bs.classList.add('open');
   document.body.classList.add('sheet-open');
+  document.getElementById('identity-header').classList.add('collapsed');
   requestAnimationFrame(() => {
     const h = bs.getBoundingClientRect().height;
     document.documentElement.style.setProperty('--sheet-height', (h + 8) + 'px');
   });
 }
 function closeBS() {
-  bs.classList.remove('open'); document.body.classList.remove('sheet-open');
+  bs.classList.remove('open');
+  document.body.classList.remove('sheet-open');
+  document.getElementById('identity-header').classList.remove('collapsed');
   const activePill = document.querySelector('.mode-pill.active');
   if (activePill) {
     activePill.classList.remove('active');
     setMode('all');
   }
+}
+
+function sheetAwarePadding() {
+  const sheetH = bs.classList.contains('open') ? bs.getBoundingClientRect().height : 0;
+  return { top: 110, bottom: sheetH + 60, left: 16, right: 16 };
 }
 
 document.getElementById('bs-close').addEventListener('click', closeBS);
@@ -46,7 +54,9 @@ function openWorkSheet(idx) {
   _workPageIdx = idx;
   renderWorkSheet();
   openBS();
-  map.flyTo({ center: WORK_STOPS[idx].coord, zoom: 13, bearing: currentBearing(), duration: 600 });
+  requestAnimationFrame(() => {
+    map.flyTo({ center: WORK_STOPS[idx].coord, zoom: 13, bearing: currentBearing(), duration: 600, padding: sheetAwarePadding() });
+  });
   document.querySelectorAll('.logo-marker').forEach((el, i) =>
     el.classList.toggle('active', i === idx)
   );
@@ -152,6 +162,12 @@ function stationSheetHtml(key, name) {
 function openStationSheet(key, name) {
   bsBody.innerHTML = stationSheetHtml(key, name);
   openBS();
+  const station = STATIONS.find(s => s.key === key && s.name === name);
+  if (station) {
+    requestAnimationFrame(() => {
+      map.flyTo({ center: station.coord, zoom: 13, bearing: currentBearing(), duration: 600, padding: sheetAwarePadding() });
+    });
+  }
 }
 
 // ── MODE INTRO SHEET ──
@@ -192,17 +208,24 @@ function openAboutSheet() {
   const actions = allActions.map(a =>
     `<a class="id-link" href="${a.href}" target="_blank" rel="noopener noreferrer" aria-label="${a.label}" title="${a.label}">${a.svg}</a>`
   ).join('');
+  const resumeBtn = d.resume
+    ? `<a href="${d.resume}" target="_blank" rel="noopener" class="about-cta-btn" style="margin-right:8px">Resume ↗</a>`
+    : '';
   bsBody.innerHTML = `
     <div style="padding:4px 0 20px">
       <div style="display:flex;align-items:center;gap:14px;margin-bottom:16px">
         <img src="/assets/headshot.jpg" alt="Colin Balcarek" style="width:72px;height:72px;border-radius:50%;object-fit:cover;border:2px solid rgba(255,255,255,.1);flex-shrink:0">
         <div>
           <div style="font-size:20px;font-weight:700;line-height:1.2">Colin Balcarek</div>
-          <div style="font-size:12px;color:#6b7280;margin-top:3px">Technical Product Manager</div>
+          <div style="font-size:12px;color:#6b7280;margin-top:3px">Data & Platform PM · NYC</div>
         </div>
       </div>
       <p style="font-size:14px;line-height:1.65;color:#374151;margin-bottom:14px">${d.bio || ''}</p>
-      <div style="margin-bottom:14px">${details}</div>
+      <div style="margin-bottom:16px">${details}</div>
+      <div style="display:flex;gap:8px;align-items:center;margin-bottom:14px">
+        ${resumeBtn}
+        <a href="mailto:colin@balcarek.org" class="about-cta-btn about-cta-btn--primary">Get in touch →</a>
+      </div>
       <div style="display:flex;gap:5px">${actions}</div>
     </div>`;
   openBS();

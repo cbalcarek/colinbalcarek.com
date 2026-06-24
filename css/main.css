@@ -93,6 +93,19 @@ body { font-family: -apple-system, 'Helvetica Neue', Helvetica, Arial, sans-seri
 }
 #ih-actions { display: flex; gap: 5px; flex-shrink: 0; }
 
+/* collapsed state when sheet is open */
+#identity-header { transition: all .3s cubic-bezier(0.25,0.46,0.45,0.94); }
+#identity-header.collapsed #ih-text,
+#identity-header.collapsed #ih-actions,
+#identity-header.collapsed #tour-start-btn { display: none; }
+#identity-header.collapsed #ih-main {
+  padding: 5px;
+  border-radius: 50%;
+  width: 44px;
+  height: 44px;
+  justify-content: center;
+}
+#identity-header.collapsed #ih-avatar { width: 34px; height: 34px; min-width: 34px; }
 
 /* ── TAP HINT ── */
 #tap-hint {
@@ -270,7 +283,7 @@ body.sheet-open #mode-switcher {
   z-index: 300;
   transform: translateY(100%);
   transition: transform .35s cubic-bezier(0.25,0.46,0.45,0.94);
-  max-height: 70vh; overflow-y: auto;
+  max-height: 50vh; overflow-y: auto;
 }
 #bottom-sheet.open { transform: translateY(0); }
 
@@ -298,7 +311,7 @@ body.sheet-open #mode-switcher {
   cursor: pointer; flex-shrink: 0;
 }
 .bs-close:hover { background: #d1d5db; }
-#bs-body { padding: 0 16px 80px; color: var(--dark-text); }
+#bs-body { padding: 0 16px 24px; color: var(--dark-text); }
 
 /* override hardcoded inline light-mode colors inside bottom sheet */
 #bs-body div, #bs-body p, #bs-body li, #bs-body td, #bs-body th, #bs-body span:not(.rpd-cap):not(.bs-handle) {
@@ -355,6 +368,36 @@ body.sheet-open #mode-switcher {
 
 /* station cursor */
 .station { cursor: pointer; }
+
+/* ── ABOUT SHEET CTA BUTTONS ── */
+.about-cta-btn {
+  display: inline-flex; align-items: center;
+  padding: 8px 16px; border-radius: 10px;
+  font-size: 13px; font-weight: 600; font-family: inherit;
+  text-decoration: none; cursor: pointer; border: none;
+  background: rgba(255,255,255,.1); color: var(--dark-text);
+  transition: background .15s;
+}
+.about-cta-btn:hover { background: rgba(255,255,255,.18); }
+.about-cta-btn--primary { background: #2563eb; color: #fff; }
+.about-cta-btn--primary:hover { background: #1d4ed8; }
+
+/* ── PULSING STOPS ── */
+.pulse-stop {
+  width: 14px; height: 14px;
+  border-radius: 50%;
+  background: var(--pulse-color);
+  opacity: 0.85;
+  pointer-events: none;
+  animation: pulse-ring 1.4s ease-out infinite;
+  transition: opacity .6s ease;
+}
+.pulse-stop--fade { opacity: 0; }
+@keyframes pulse-ring {
+  0%   { box-shadow: 0 0 0 0 var(--pulse-color); transform: scale(1); }
+  60%  { box-shadow: 0 0 0 10px transparent; transform: scale(1.1); }
+  100% { box-shadow: 0 0 0 0 transparent; transform: scale(1); }
+}
 
 /* Tour active: sheet lifts, year selector hides, mode pills hide */
 body.tour-active #bottom-sheet          { bottom: 67px; }

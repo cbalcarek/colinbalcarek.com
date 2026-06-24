@@ -246,8 +246,56 @@ function addMapLayers() {
 
 // ── MAP LOAD ──
 map.on('load', () => {
+  map.setPadding({ top: 110, bottom: 70, left: 16, right: 16 });
   addMapLayers();
+  runIntroSequence();
 });
+
+// ── INTRO SEQUENCE ──
+function runIntroSequence() {
+  const isFirstVisit = !localStorage.getItem('intro_v1');
+
+  if (isFirstVisit) {
+    // Cinematic: start zoomed out, fly in
+    map.jumpTo({ center: NYC_CENTER, zoom: 9.5, bearing: 29 });
+    setTimeout(() => {
+      map.flyTo({ center: NYC_CENTER, zoom: 12, bearing: 29, duration: 2200,
+        easing: t => t < 0.5 ? 2*t*t : -1+(4-2*t)*t });
+    }, 300);
+    localStorage.setItem('intro_v1', '1');
+  }
+
+  // Pulse stops after lines appear (delay accounts for cinematic on first visit)
+  setTimeout(pulseStops, isFirstVisit ? 2800 : 400);
+}
+
+// ── PULSING STOPS ──
+const _pulseMarkers = [];
+
+function pulseStops() {
+  _pulseMarkers.forEach(m => m.remove());
+  _pulseMarkers.length = 0;
+
+  STATIONS.forEach(s => {
+    const color = MODE_COLORS[s.key] || '#6b7280';
+    const el = document.createElement('div');
+    el.className = 'pulse-stop';
+    el.style.setProperty('--pulse-color', color);
+    const m = new mapboxgl.Marker({ element: el, anchor: 'center' })
+      .setLngLat(s.coord)
+      .addTo(map);
+    _pulseMarkers.push(m);
+  });
+
+  // Fade out after 4 seconds
+  setTimeout(() => {
+    _pulseMarkers.forEach(m => m.getElement().classList.add('pulse-stop--fade'));
+    setTimeout(() => {
+      _pulseMarkers.forEach(m => m.remove());
+      _pulseMarkers.length = 0;
+    }, 600);
+  }, 4000);
+}
 
 // ── STYLE SWITCHER ──
 function switchMapStyle(styleId) {

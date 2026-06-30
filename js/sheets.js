@@ -76,7 +76,7 @@ function renderWorkSheet() {
         <div style="flex:1">
           <div style="font-size:16px;font-weight:700;line-height:1.2">${d.label}</div>
           <div style="font-size:11px;color:#6b7280;margin-top:2px">${d.role}</div>
-          <div style="font-size:11px;color:#9ca3af">${d.dates}</div>
+          ${d.dates ? `<div style="font-size:11px;color:#9ca3af">${d.dates}</div>` : ''}
         </div>
       </div>
       <ul style="margin:0;padding-left:16px;font-size:13px;line-height:1.65;color:#374151">${bullets}</ul>
@@ -92,19 +92,6 @@ function renderWorkSheet() {
 // ── RUNNING SHEET ──
 function openRunningSheet() {
   const n = MARATHON_DATA.length || 11;
-  const photos = getRunningPhotos();
-  const isDesktop = window.innerWidth > 680;
-  const photoGrid = isDesktop
-    ? `<div class="run-photo-desktop">
-        <div class="rpd-hero run-photo-tap" data-idx="0">
-          <img src="${photos[0].src}" alt="${photos[0].cap}" style="object-position:${photos[0].pos}">
-          <span class="rpd-cap">${photos[0].cap}</span>
-        </div>
-        <div class="rpd-thumbs">
-          ${photos.slice(1).map((p,i)=>`<div class="rpd-thumb run-photo-tap" data-idx="${i+1}"><img src="${p.src}" alt="${p.cap}" style="object-position:${p.pos}"><span>${p.cap}</span></div>`).join('')}
-        </div>
-      </div>`
-    : `<div class="run-photo-grid">${photos.map((p,i)=>`<div class="run-photo-cell run-photo-tap" data-idx="${i}"><img src="${p.src}" alt="${p.cap}" style="object-position:${p.pos}"><span>${p.cap}</span></div>`).join('')}</div>`;
   const statsRow = `<div class="stats-row" style="margin:12px 0">
     <div class="stat-item"><div class="stat-n" style="color:#EE352E">${n}</div><div class="stat-l">Finishes</div></div>
     <div class="stat-item"><div class="stat-n">26.2</div><div class="stat-l">Miles</div></div>
@@ -116,17 +103,10 @@ function openRunningSheet() {
       <div style="width:38px;height:38px;border-radius:9px;background:#EE352E;display:flex;align-items:center;justify-content:center;font-size:18px">🏃</div>
       <div><div style="font-size:17px;font-weight:700">NYC Marathon ×${n}</div><div style="font-size:11px;color:#6b7280">26.2 mi · 5 boroughs · every year since 2014</div></div>
     </div>
-    ${photoGrid}
     ${statsRow}
     ${table}
   </div>`;
   openBS();
-
-  setTimeout(() => {
-    bsBody.querySelectorAll('.run-photo-tap').forEach(el => {
-      el.addEventListener('click', () => openLightbox(photos, +el.dataset.idx));
-    });
-  }, 0);
 }
 
 // ── STATION SHEET ──
@@ -250,7 +230,7 @@ function renderLightbox() {
   const p = _lbPhotos[_lbIdx];
   const img = document.getElementById('lb-img');
   img.src = p.src;
-  img.style.objectPosition = p.pos;
+  img.style.objectPosition = '';
   img.onerror = () => { img.alt = 'Image unavailable'; };
   document.getElementById('lb-cap').textContent = p.cap;
   document.getElementById('lb-counter').textContent = `${_lbIdx + 1} / ${_lbPhotos.length}`;

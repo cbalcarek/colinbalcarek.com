@@ -51,12 +51,16 @@ if (!localStorage.getItem('tap_hint_v1')) {
 // ── MARATHON DATA ──
 loadMarathons().then(items => {
   MARATHON_DATA = items;
+  // Re-render running sheet if it's already open with stale "Loading…" content
   if (currentMode === 'running') openRunningSheet();
 });
 
 // ── CLOSE BOTTOM SHEET ON EMPTY MAP CLICK ──
 map.on('click', e => {
-  if (!e.originalEvent.defaultPrevented) closeBS();
+  if (!e.originalEvent.defaultPrevented) {
+    closeBS();
+    if (_expandedPhotoEl) { _expandedPhotoEl.classList.remove('expanded'); _expandedPhotoEl = null; }
+  }
 });
 
 map.getCanvas().addEventListener('click', e => {

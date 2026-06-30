@@ -24,11 +24,11 @@ map.on('error', e => {
 
 // ── WORK STOPS — ordered newest→oldest for paging ──
 const WORK_STOPS = [
-  { name:'125 St',              label:'Medidata',    logo:'/assets/logos/medidata.svg',   coord:[-73.937594, 40.804138] },
-  { name:'96 St',               label:'Codifyd',     logo:'/assets/logos/codifyd.svg',    coord:[-73.951070, 40.785672] },
-  { name:'59 St',               label:'Scholastic',  logo:'/assets/logos/scholastic.svg', coord:[-73.967967, 40.762526] },
-  { name:'Grand Central-42 St', label:'McGraw-Hill', logo:'/assets/logos/mcgrawhill.svg', coord:[-73.976848, 40.751776] },
-  { name:'Bleecker St',         label:'NYU Stern',   logo:'/assets/logos/nyu.svg',        coord:[-73.994659, 40.725915] },
+  { name:'125 St',              label:'Medidata',    logo:'/assets/logos/medidata.png',   coord:[-73.937594, 40.804138] },
+  { name:'96 St',               label:'Codifyd',     logo:'/assets/logos/codifyd.png',    coord:[-73.951070, 40.785672] },
+  { name:'59 St',               label:'Scholastic',  logo:'/assets/logos/scholastic.png', coord:[-73.967967, 40.762526] },
+  { name:'Grand Central-42 St', label:'McGraw-Hill', logo:'/assets/logos/mcgrawhill.png', coord:[-73.976848, 40.751776] },
+  { name:'Bleecker St',         label:'NYU Stern',   logo:'/assets/logos/nyu.png',        coord:[-73.994659, 40.725915] },
 ];
 
 // ── STATION DATA ──
@@ -281,10 +281,15 @@ function pulseStops() {
     const el = document.createElement('div');
     el.className = 'pulse-stop';
     el.style.setProperty('--pulse-color', color);
+    el.style.opacity = '0';
     const m = new mapboxgl.Marker({ element: el, anchor: 'center' })
       .setLngLat(s.coord)
       .addTo(map);
     _pulseMarkers.push(m);
+  });
+  // let Mapbox position markers before making visible
+  requestAnimationFrame(() => {
+    _pulseMarkers.forEach(m => { m.getElement().style.opacity = ''; });
   });
 
   // Fade out after 4 seconds
@@ -320,6 +325,48 @@ function switchMapStyle(styleId) {
 
 }
 
+// ── PHOTO MARKERS (running / art / tech modes) ──
+const _photoMarkers = [];
+let _expandedPhotoEl = null;
+
+const PHOTO_STOPS = [
+  { key:'running', coord:[-73.92530,  40.81005 ], src:'/assets/running-1.jpg', cap:'Bronx 10 Mile',          lbIdx:1 },
+  { key:'running', coord:[-73.95361,  40.72884 ], src:'/assets/running-2.jpg', cap:'NYC Marathon · Brooklyn', lbIdx:0 },
+  { key:'running', coord:[-73.97670,  40.77253 ], src:'/assets/running-3.jpg', cap:'Finish · Central Park',   lbIdx:2 },
+];
+
+function showPhotoMarkers(mode) {
+  hidePhotoMarkers();
+  const photos = getRunningPhotos();
+  PHOTO_STOPS.filter(p => p.key === mode).forEach(stop => {
+    const el = document.createElement('div');
+    el.className = 'photo-marker';
+    el.innerHTML = `<img src="${stop.src}" alt="${stop.cap}"><div class="photo-marker-cap">${stop.cap}</div>`;
+    el.addEventListener('click', e => {
+      e.stopPropagation();
+      if (el.classList.contains('expanded')) {
+        openLightbox(photos, stop.lbIdx);
+      } else {
+        if (_expandedPhotoEl && _expandedPhotoEl !== el) {
+          _expandedPhotoEl.classList.remove('expanded');
+        }
+        el.classList.toggle('expanded');
+        _expandedPhotoEl = el.classList.contains('expanded') ? el : null;
+      }
+    });
+    const m = new mapboxgl.Marker({ element: el, anchor: 'bottom' })
+      .setLngLat(stop.coord)
+      .addTo(map);
+    _photoMarkers.push(m);
+  });
+}
+
+function hidePhotoMarkers() {
+  _photoMarkers.forEach(m => m.remove());
+  _photoMarkers.length = 0;
+  _expandedPhotoEl = null;
+}
+
 // ── LOGO MARKERS (work mode) ──
 const _logoMarkers = [];
 
@@ -332,7 +379,8 @@ function showLogoMarkers() {
       e.stopPropagation();
       openWorkSheet(idx);
     });
-    const m = new mapboxgl.Marker({ element: el, anchor: 'bottom' })
+    const side = idx % 2 === 0 ? 28 : -28;
+    const m = new mapboxgl.Marker({ element: el, anchor: 'bottom', offset: [side, 0] })
       .setLngLat(stop.coord)
       .addTo(map);
     _logoMarkers.push(m);
@@ -450,13 +498,19 @@ function setMode(mode) {
   }
 
   hideLogoMarkers();
-  if (mode === 'work') showLogoMarkers();
+  hidePhotoMarkers();
+  if (mode === 'work') {
+    showLogoMarkers();
+    // hide station labels — logo markers show company names instead
+    if (map.getLayer('station-labels')) map.setLayoutProperty('station-labels', 'visibility', 'none');
+  }
+  if (mode === 'running') showPhotoMarkers('running');
 
   if (mode === 'running') openRunningSheet();
   if (mode === 'work' || mode === 'art' || mode === 'tech') openModeIntroSheet(mode);
 
   const flyTargets = {
-    work:    { center:[-73.970, 40.760], zoom:12   },
+    work:    { center:[-73.968, 40.765], zoom:11.5 },
     running: { center:[-73.971, 40.710], zoom:10.5 },
     art:     { center:[-73.930, 40.752], zoom:11   },
     tech:    { center:[-73.975, 40.780], zoom:11.5 },

@@ -4,7 +4,7 @@
       "label": "Medidata Solutions",
       "dates": "2022–Present",
       "role": "Data Catalog Product Manager",
-      "logo": "/assets/logos/medidata.svg",
+      "logo": "/assets/logos/medidata.png",
       "color": "#FF6319",
       "bullets": [
         "Own an enterprise data catalog platform used by 1,400+ customers — the metadata layer for a flagship data product",
@@ -21,7 +21,7 @@
       "label": "Codifyd",
       "dates": "2020–2022",
       "role": "Manager, Product MDM Consulting",
-      "logo": "/assets/logos/codifyd.svg",
+      "logo": "/assets/logos/codifyd.png",
       "color": "#FF6319",
       "bullets": [
         "Led business analysis for the MDM consulting practice across all client workstreams",
@@ -36,7 +36,7 @@
       "label": "Scholastic",
       "dates": "2016–2020",
       "role": "Product Catalog Product Manager",
-      "logo": "/assets/logos/scholastic.svg",
+      "logo": "/assets/logos/scholastic.png",
       "color": "#FF6319",
       "bullets": [
         "Launched global enterprise product catalog across e-commerce and downstream internal systems",
@@ -49,7 +49,7 @@
       "label": "McGraw-Hill Education",
       "dates": "2015–2016",
       "role": "Digital Product Development Coordinator",
-      "logo": "/assets/logos/mcgrawhill.svg",
+      "logo": "/assets/logos/mcgrawhill.png",
       "color": "#FF6319",
       "bullets": [
         "Business analysis of legacy systems to map future-state processes for a new master data platform",
@@ -59,9 +59,9 @@
     },
     {
       "label": "NYU Stern School of Business",
-      "dates": "2010–2014",
+      "dates": "",
       "role": "B.S. Information Systems & Marketing",
-      "logo": "/assets/logos/nyu.svg",
+      "logo": "/assets/logos/nyu.png",
       "color": "#57068C",
       "bullets": [
         "Concentrations in Information Systems and Marketing",
@@ -227,7 +227,7 @@
     "bio": "I'm a Technical Product Manager based in NYC. I build data products, run the NYC Marathon every year, make ceramics and prints, and wrote a subway app because the MTA deserved better.",
     "details": [
       "📍 New York City",
-      "💼 Data & Platform PM · 10 years experience",
+      "💼 Data Platform Product Manager · 10 years experience",
       "🎓 NYU Stern · Information Systems & Marketing"
     ],
     "resume": "/assets/colin-balcarek-resume.pdf",
@@ -241,7 +241,7 @@
       "color": "#FF6319",
       "icon": "💼",
       "title": "Work",
-      "sub": "Data & Platform PM · NYC",
+      "sub": "Data Platform Product Manager · NYC",
       "body": "10 years building data products — enterprise catalogs, MDM platforms, and the integrations that make them useful. I've retired 30+ legacy systems, managed 1,000+ end users, and led teams from roadmap to release. Currently owning a data catalog platform at Medidata used by 1,400+ enterprise customers.",
       "cta": "Tap a stop on the orange line to see each role."
     },

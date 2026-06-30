@@ -1,7 +1,7 @@
 'use strict';
 
 // ── MARATHON ──
-const MARATHON_CACHE_KEY = 'marathons_v2';
+const MARATHON_CACHE_KEY = 'marathons_v3';
 
 async function loadMarathons() {
   try {
